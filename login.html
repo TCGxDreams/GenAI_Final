@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Khôi Bot Chat</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        /* Base CSS variables for both light and dark modes */
+        :root {
+            /* Dark theme (default) */
+            --primary-color: #4968e6;
+            --primary-color-alt: #3a57d3;
+            --secondary-color: #1e2127;
+            --title-color: #ffffff;
+            --text-color: #a0a5b0;
+            --white-color: #fff;
+            --body-color: #121418;
+            --card-bg: #1a1d23;
+            --border-color: #32343a;
+            --input-bg: #242830;
+        }
+
+        /* Light theme colors */
+        [data-theme="light"] {
+            --primary-color: #4968e6;
+            --primary-color-alt: #3a57d3;
+            --secondary-color: #f0f2f5;
+            --title-color: #2c3e50;
+            --text-color: #5a6a85;
+            --white-color: #000;
+            --body-color: #e5e9f0;
+            --card-bg: #ffffff;
+            --border-color: #d1d9e6;
+            --input-bg: #f0f2f5;
+        }
+        
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: var(--body-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--title-color);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+            background-color: var(--input-bg);
+            color: var(--white-color);
+            font-size: 1rem;
+            transition: box-shadow 0.2s, background-color 0.3s, color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+        
+        input::placeholder {
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            margin-top: 0.5rem;
+        }
+        
+        button:hover {
+            background-color: var(--primary-color-alt);
+            transform: translateY(-2px);
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+        
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .password-container {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+        }
+        
+        .password-toggle:hover {
+            color: var(--white-color);
+        }
+        
+        .password-container input {
+            padding-right: 40px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Forgot Password Styles */
+        .forgot-password-link {
+            text-align: center;
+            margin: 0.5rem 0 1rem;
+        }
+
+        .forgot-password-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .forgot-password-link a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 10% auto;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            animation: modal-animate 0.3s ease-out;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        @keyframes modal-animate {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--title-color);
+            font-size: 1.2rem;
+        }
+
+        .close-modal {
+            color: var(--text-color);
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-modal:hover {
+            color: var(--white-color);
+        }
+
+        .modal-description {
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 0 0;
+            gap: 10px;
+        }
+
+        /* Form styles for modal */
+        .modal .form-group {
+            margin-bottom: 15px;
+        }
+
+        .modal label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--title-color);
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-color-alt);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-color);
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--white-color);
+        }
+
+        .error-message {
+            color: #ff4d4d;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            display: none;
+            text-align: left;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .success-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .success-message svg {
+            margin-bottom: 15px;
+        }
+
+        .success-message h3 {
+            color: var(--title-color);
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .success-message button {
+            margin-top: 10px;
+        }
+        
+        /* Theme toggle button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color: var(--text-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .theme-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+        
+        /* Mobile optimization */
+        @media screen and (max-width: 480px) {
+            .container {
+                width: 90%;
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            input, button {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button id="theme-toggle-btn" class="theme-toggle" title="Chuyển đổi chủ đề">
+        <i class="ri-sun-line"></i>
+    </button>
+    
+    <div class="container">
+        <div class="logo">
+            <img src="./img/Khoi.png" alt="Khôi Bot Logo">
+        </div>
+        <h1>Login to Khôi Bot</h1>
+        <div id="login-form-container">
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="Email Address" required>
+                </div>
+                <div class="form-group password-container">
+                    <input type="password" id="password" placeholder="Password" required>
+                    <span class="password-toggle" id="password-toggle">
+                        <i class="ri-eye-line"></i>
+                    </span>
+                </div>
+                <div id="login-error" class="error-message"></div>
+                <button type="submit" id="login-btn">
+                    <span class="btn-text">Login</span>
+                </button>
+            </form>
+            
+            <!-- Forgot Password Link -->
+            <div class="forgot-password-link">
+                <a href="#" id="forgot-password-link">Forgot Password?</a>
+            </div>
+            
+            <div class="login-link">
+                Don't have an account? <a href="register.html">Register here</a>
+            </div>
+        </div>
+        
+        <!-- Login Success Message -->
+        <div id="login-success" style="display: none;">
+            <div class="success-message">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <h3>Login Successful!</h3>
+                <p>Welcome back to Khôi Bot. Redirecting you to your chat...</p>
+                <button type="button" id="go-to-chat" class="btn-primary">Go to Chat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgot-password-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="forgot-modal-title">Account Verification & Password Reset</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <!-- Account Verification Step -->
+                <div id="email-verification-step">
+                    <p class="modal-description">Enter your email address and phone number to verify your account.</p>
+                    <form id="email-verification-form">
+                        <div class="form-group">
+                            <input type="email" id="reset-email" placeholder="Email Address" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="reset-phone" placeholder="Phone Number" required>
+                        </div>
+                        <div id="email-verification-error" class="error-message"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-secondary cancel-modal">Cancel</button>
+                            <button type="submit" id="verify-email-btn" class="btn-primary">
+                                <span class="btn-text">Verify Account</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Password Reset Step -->
+                <div id="password-reset-step" style="display: none;">
+                    <p class="modal-description">Create a new password for your account.</p>
+                    <form id="password-reset-form">
+                        <div class="form-group password-container">
+                            <input type="password" id="new-reset-password" placeholder="New Password" required>
+                            <span class="password-toggle" data-target="new-reset-password">
+                                <i class="ri-eye-line"></i>
+                            </span>
+                        </div>
+                        <div class="form-group password-container">
+                            <input type="password" id="confirm-reset-password" placeholder="Confirm New Password" required>
+                            <span class="password-toggle" data-target="confirm-reset-password">
+                                <i class="ri-eye-line"></i>
+                            </span>
+                        </div>
+                        <div id="password-reset-error" class="error-message"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-secondary cancel-modal">Cancel</button>
+                            <button type="submit" id="reset-password-btn" class="btn-primary">
+                                <span class="btn-text">Reset Password</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Success Message Step -->
+                <div id="reset-success-step" style="display: none;">
+                    <div class="success-message">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <h3>Password Reset Successful</h3>
+                        <p>Your password has been reset successfully. You can now log in with your new password.</p>
+                        <button type="button" id="back-to-login" class="btn-primary">Back to Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://67d3d8158bca322cc26b4105.mockapi.io/Users';
+        const CHAT_API_URL = 'https://67d3d8158bca322cc26b4105.mockapi.io/Chat';
+        
+        // Theme toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for saved theme preference or use default
+            let currentTheme = localStorage.getItem('theme') ;
+            
+            // If no saved preference, use browser preference
+            if (!currentTheme) {
+                currentTheme = detectBrowserThemePreference();
+                // Save the detected preference
+                localStorage.setItem('theme', currentTheme);
+            }
+            // Apply the theme
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            
+            // Update button icon based on current theme
+            updateThemeToggleIcon(currentTheme);
+            
+            // Add event listener to theme toggle button
+            const themeToggle = document.getElementById('theme-toggle-btn');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    // Get current theme
+                    const currentTheme = document.documentElement.getAttribute('data-theme');
+                    
+                    // Toggle theme
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    
+                    // Save preference
+                    localStorage.setItem('theme', newTheme);
+                    
+                    // Apply new theme
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    
+                    // Update button icon
+                    updateThemeToggleIcon(newTheme);
+                });
+            }
+        });
+
+        // Update the toggle button icon based on theme
+        function updateThemeToggleIcon(theme) {
+            const themeToggle = document.getElementById('theme-toggle-btn');
+            if (themeToggle) {
+                if (theme === 'dark') {
+                    themeToggle.innerHTML = '<i class="ri-sun-line"></i>'; // Show sun in dark mode
+                } else {
+                    themeToggle.innerHTML = '<i class="ri-moon-line"></i>'; // Show moon in light mode
+                }
+            }
+        }
+        
+        // Toggle password visibility for login form
+        const passwordToggle = document.getElementById('password-toggle');
+        const passwordInput = document.getElementById('password');
+        
+        passwordToggle.addEventListener('click', function() {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordToggle.innerHTML = '<i class="ri-eye-off-line"></i>';
+            } else {
+                passwordInput.type = 'password';
+                passwordToggle.innerHTML = '<i class="ri-eye-line"></i>';
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const loginBtn = document.getElementById('login-btn');
+            const btnText = loginBtn.querySelector('.btn-text');
+            const loginError = document.getElementById('login-error');
+            
+            // Show loading state
+            loginBtn.disabled = true;
+            btnText.textContent = 'Logging in...';
+            if (!loginBtn.querySelector('.loading')) {
+                const loadingSpinner = document.createElement('span');
+                loadingSpinner.className = 'loading';
+                loginBtn.appendChild(loadingSpinner);
+            }
+            
+            // Reset error
+            loginError.style.display = 'none';
+            loginError.textContent = '';
+            
+            const credentials = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}?email=${encodeURIComponent(credentials.email)}`);
+                const users = await response.json();
+                
+                if (users.length === 0) {
+                    loginError.textContent = 'User not found!';
+                    loginError.style.display = 'block';
+                    resetButtonState(loginBtn, 'Login');
+                    return;
+                }
+
+                const user = users[0];
+                
+                if (user.password === credentials.password) {
+                    // Store user info in localStorage for chat application
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    localStorage.setItem('chatUserId', user.id_Users);
+                    
+                    // Check if user already has a chat history
+                    const chatResponse = await fetch(`${CHAT_API_URL}?id_Users=${user.id_Users}`);
+                    const chatData = await chatResponse.json();
+                    
+                    if (chatData.length === 0) {
+                        // Create new chat entry for this user
+                        const newChatEntry = {
+                            Created_Date: Math.floor(Date.now() / 1000),
+                            Name: user.name,
+                            Chat_history: JSON.stringify([]),
+                            id_Users: user.id_Users
+                        };
+                        
+                        await fetch(CHAT_API_URL, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(newChatEntry)
+                        });
+                    }
+                    
+                    // Show success message instead of alert
+                    document.getElementById('login-form-container').style.display = 'none';
+                    document.getElementById('login-success').style.display = 'block';
+                    
+                    // Auto redirect after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                } else {
+                    loginError.textContent = 'Invalid password!';
+                    loginError.style.display = 'block';
+                    resetButtonState(loginBtn, 'Login');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                loginError.textContent = 'An error occurred. Please try again.';
+                loginError.style.display = 'block';
+                resetButtonState(loginBtn, 'Login');
+            }
+        });
+        
+        // Go to chat button
+        document.getElementById('go-to-chat').addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
+        
+        // Helper function to reset button state
+        function resetButtonState(button, text) {
+            button.disabled = false;
+            const btnText = button.querySelector('.btn-text');
+            btnText.textContent = text;
+            
+            // Remove loading spinner if it exists
+            const loadingSpinner = button.querySelector('.loading');
+            if (loadingSpinner) {
+                button.removeChild(loadingSpinner);
+            }
+        }
+        
+        // Forgot Password Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const forgotPasswordLink = document.getElementById('forgot-password-link');
+            const forgotPasswordModal = document.getElementById('forgot-password-modal');
+            const closeModal = forgotPasswordModal.querySelector('.close-modal');
+            const cancelButtons = forgotPasswordModal.querySelectorAll('.cancel-modal');
+            
+            // Forms and steps
+            const emailVerificationForm = document.getElementById('email-verification-form');
+            const passwordResetForm = document.getElementById('password-reset-form');
+            const emailVerificationStep = document.getElementById('email-verification-step');
+            const passwordResetStep = document.getElementById('password-reset-step');
+            const resetSuccessStep = document.getElementById('reset-success-step');
+            
+            // Buttons
+            const verifyEmailBtn = document.getElementById('verify-email-btn');
+            const resetPasswordBtn = document.getElementById('reset-password-btn');
+            const backToLoginBtn = document.getElementById('back-to-login');
+            
+            // Inputs
+            const resetEmailInput = document.getElementById('reset-email');
+            const resetPhoneInput = document.getElementById('reset-phone');
+            const newResetPasswordInput = document.getElementById('new-reset-password');
+            const confirmResetPasswordInput = document.getElementById('confirm-reset-password');
+            
+            // Error messages
+            const emailVerificationError = document.getElementById('email-verification-error');
+            const passwordResetError = document.getElementById('password-reset-error');
+            
+            // Password toggle buttons in modal
+            const passwordToggles = forgotPasswordModal.querySelectorAll('.password-toggle');
+            
+            // Current user being reset
+            let currentResetUser = null;
+            
+            // Open modal when forgot password link is clicked
+            forgotPasswordLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                openModal();
+            });
+            
+            // Function to open modal and reset to initial state
+            function openModal() {
+                forgotPasswordModal.style.display = 'block';
+                resetModalState();
+            }
+            
+            // Reset modal to initial state
+            function resetModalState() {
+                // Show email verification step, hide others
+                emailVerificationStep.style.display = 'block';
+                passwordResetStep.style.display = 'none';
+                resetSuccessStep.style.display = 'none';
+                
+                // Clear forms
+                emailVerificationForm.reset();
+                passwordResetForm.reset();
+                
+                // Clear errors
+                emailVerificationError.style.display = 'none';
+                emailVerificationError.textContent = '';
+                passwordResetError.style.display = 'none';
+                passwordResetError.textContent = '';
+                
+                // Reset loading states
+                resetLoadingState(verifyEmailBtn);
+                resetLoadingState(resetPasswordBtn);
+                
+                // Reset current user
+                currentResetUser = null;
+            }
+            
+            // Close modal function
+            function closePasswordModal() {
+                forgotPasswordModal.style.display = 'none';
+            }
+            
+            // Close modal when close button or cancel is clicked
+            closeModal.addEventListener('click', closePasswordModal);
+            cancelButtons.forEach(button => {
+                button.addEventListener('click', closePasswordModal);
+            });
+            
+            // Close when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === forgotPasswordModal) {
+                    closePasswordModal();
+                }
+            });
+            
+            // Back to login from success
+            backToLoginBtn.addEventListener('click', function() {
+                closePasswordModal();
+            });
+            
+            // Toggle password visibility in modal
+            passwordToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const input = document.getElementById(targetId);
+                    
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        this.innerHTML = '<i class="ri-eye-off-line"></i>';
+                    } else {
+                        input.type = 'password';
+                        this.innerHTML = '<i class="ri-eye-line"></i>';
+                    }
+                });
+            });
+            
+            // Loading state functions
+            function showLoading(button) {
+                button.disabled = true;
+                const btnText = button.querySelector('.btn-text');
+                
+                if (button === verifyEmailBtn) {
+                    btnText.textContent = 'Verifying Account...';
+                } else if (button === resetPasswordBtn) {
+                    btnText.textContent = 'Resetting...';
+                }
+                
+                // Add loading spinner if it doesn't exist
+                if (!button.querySelector('.loading')) {
+                    const loadingSpinner = document.createElement('span');
+                    loadingSpinner.className = 'loading';
+                    button.appendChild(loadingSpinner);
+                }
+            }
+            
+            function resetLoadingState(button) {
+                button.disabled = false;
+                const btnText = button.querySelector('.btn-text');
+                
+                if (button === verifyEmailBtn) {
+                    btnText.textContent = 'Verify Account';
+                } else if (button === resetPasswordBtn) {
+                    btnText.textContent = 'Reset Password';
+                }
+                
+                // Remove loading spinner if it exists
+                const loadingSpinner = button.querySelector('.loading');
+                if (loadingSpinner) {
+                    button.removeChild(loadingSpinner);
+                }
+            }
+            
+            // Account verification form submit
+            emailVerificationForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = resetEmailInput.value.trim();
+                const phone = document.getElementById('reset-phone').value.trim();
+                
+                // Clear error
+                emailVerificationError.style.display = 'none';
+                emailVerificationError.textContent = '';
+                
+                // Show loading
+                showLoading(verifyEmailBtn);
+                
+                try {
+                    // First check if email exists
+                    const response = await fetch(`${API_URL}?email=${encodeURIComponent(email)}`);
+                    const users = await response.json();
+                    
+                    if (users.length === 0) {
+                        emailVerificationError.textContent = 'Email not found. Please check and try again.';
+                        emailVerificationError.style.display = 'block';
+                        resetLoadingState(verifyEmailBtn);
+                        return;
+                    }
+                    
+                    // Then verify the phone number matches
+                    const user = users[0];
+                    if (user.number !== phone) {
+                        emailVerificationError.textContent = 'Phone number does not match our records for this email.';
+                        emailVerificationError.style.display = 'block';
+                        resetLoadingState(verifyEmailBtn);
+                        return;
+                    }
+                    
+                    // Store user data for reset
+                    currentResetUser = user;
+                    
+                    // Show password reset step
+                    emailVerificationStep.style.display = 'none';
+                    passwordResetStep.style.display = 'block';
+                    
+                } catch (error) {
+                    console.error('Error verifying account:', error);
+                    emailVerificationError.textContent = 'An error occurred. Please try again later.';
+                    emailVerificationError.style.display = 'block';
+                } finally {
+                    resetLoadingState(verifyEmailBtn);
+                }
+            });
+            
+            // Password reset form submit
+            passwordResetForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const newPassword = newResetPasswordInput.value;
+                const confirmPassword = confirmResetPasswordInput.value;
+                
+                // Clear error
+                passwordResetError.style.display = 'none';
+                passwordResetError.textContent = '';
+                
+                // Validate passwords
+                if (newPassword !== confirmPassword) {
+                    passwordResetError.textContent = 'Passwords do not match.';
+                    passwordResetError.style.display = 'block';
+                    return;
+                }
+                
+                if (newPassword.trim() === '') {
+                    passwordResetError.textContent = 'Password cannot be empty.';
+                    passwordResetError.style.display = 'block';
+                    return;
+                }
+                
+                // Show loading
+                showLoading(resetPasswordBtn);
+                
+                try {
+                    // Make sure we have user data
+                    if (!currentResetUser) {
+                        passwordResetError.textContent = 'Error: User information not found. Please try again.';
+                        passwordResetError.style.display = 'block';
+                        resetLoadingState(resetPasswordBtn);
+                        return;
+                    }
+                    
+                    // Get the correct user ID (could be either id or id_Users)
+                    const userId = currentResetUser.id || currentResetUser.id_Users;
+                    
+                    if (!userId) {
+                        passwordResetError.textContent = 'Error: User ID not found. Please try again.';
+                        passwordResetError.style.display = 'block';
+                        resetLoadingState(resetPasswordBtn);
+                        return;
+                    }
+                    
+                    console.log('Updating password for user ID:', userId);
+                    
+                    // Update the password
+                    const updateResponse = await fetch(`${API_URL}/${userId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            password: newPassword
+                        })
+                    });
+                    
+                    if (updateResponse.ok) {
+                        console.log('Password updated successfully');
+                        // Show success message
+                        passwordResetStep.style.display = 'none';
+                        resetSuccessStep.style.display = 'block';
+                    } else {
+                        console.error('Failed to update password:', await updateResponse.text());
+                        passwordResetError.textContent = 'Failed to reset password. Please try again.';
+                        passwordResetError.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Error resetting password:', error);
+                    passwordResetError.textContent = 'An error occurred. Please try again later.';
+                    passwordResetError.style.display = 'block';
+                } finally {
+                    resetLoadingState(resetPasswordBtn);
+                }
+            });
+        });
+// Silent DevTools prevention - no alerts
+document.addEventListener('keydown', function(e) {
+    // Prevent F12
+    if (e.key === 'F12') {
+        e.preventDefault();
+        return false;
+    }
+    
+    // Prevent Ctrl+Shift+I
+    if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+        e.preventDefault();
+        return false;
+    }
+    
+    // Prevent Ctrl+Shift+J
+    if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+        e.preventDefault();
+        return false;
+    }
+    
+    // Prevent Ctrl+Shift+C
+    if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+        e.preventDefault();
+        return false;
+    }
+    
+    // Prevent Ctrl+U (view source)
+    if (e.ctrlKey && e.key === 'u') {
+        e.preventDefault();
+        return false;
+    }
+});
+function detectBrowserThemePreference() {
+  if (window.matchMedia) {
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    } 
+    else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      return 'light';
+    }
+  }
+  return 'dark';
+}
+// Silent context menu prevention
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    return false;
+});
+
+// More sophisticated DevTools detection
+(function() {
+    const devtools = {
+        isOpen: false,
+        orientation: undefined
+    };
+    
+    // Define different checks for DevTools
+    const threshold = 160;
+    const emitEvent = function(isOpen, orientation) {
+        window.dispatchEvent(new CustomEvent('devtoolschange', {
+            detail: {
+                isOpen,
+                orientation
+            }
+        }));
+    };
+    
+    // Check window size differences
+    const checkDevTools = function() {
+        const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+        const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+        const orientation = widthThreshold ? 'vertical' : 'horizontal';
+        
+        if (widthThreshold || heightThreshold) {
+            if (!devtools.isOpen || devtools.orientation !== orientation) {
+                devtools.isOpen = true;
+                devtools.orientation = orientation;
+                emitEvent(true, orientation);
+            }
+        } else {
+            if (devtools.isOpen) {
+                devtools.isOpen = false;
+                devtools.orientation = undefined;
+                emitEvent(false, undefined);
+            }
+        }
+    };
+    
+    window.addEventListener('resize', checkDevTools);
+    setInterval(checkDevTools, 1000);
+})();
+    </script>
+</body>
+</html>

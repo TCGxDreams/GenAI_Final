@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Khôi Bot</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="./css/chat.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+AuVYrr+dA8xD9zs6FwLpaCct6O9ctzYFfFr4dgmgccOTx" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+</head>
+<body>
+  <!-- Mobile Sidebar Toggle Button -->
+  <button class="sidebar-toggle" id="sidebar-toggle">
+    <i class="ri-menu-line"></i>
+  </button>
+
+  <!-- Sidebar for Chat List -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h3 class="sidebar-title">Chat Khôi Bot</h3>
+      <button class="new-chat-btn" id="new-chat-btn">
+        <i class="ri-add-line"></i> New
+      </button>
+    </div>
+    
+    <!-- Search Feature -->
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Search for conversations...">
+    </div>
+    
+    <div class="chat-list" id="chat-list">
+      <!-- Chat items will be added here dynamically -->
+    </div>
+    
+    <div class="user-section">
+      <div class="user-info" id="user-info-trigger">
+        <div class="user-avatar" id="user-avatar"></div>
+        <div class="user-name" id="user-name">Loading...</div>
+      </div>
+      <button id="theme-toggle-btn" class="theme-toggle" title="Chuyển đổi chủ đề">
+        <i class="ri-sun-line"></i>
+      </button>
+      <button class="logout-btn" id="logout-btn">
+        <i class="ri-logout-box-line"></i> Log out
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Chat Area -->
+  <div class="main-content">
+    <div class="chat-container">
+      <div class="chat-header">
+        <h3 class="chat-title" id="current-chat-title">Chat với Khôi Bot</h3>
+        <div class="header-actions">
+          <button id="export-button" title="Export chat">
+            <i class="ri-download-2-line"></i>
+          </button>
+          <button id="clear-button" title="Delete all messages">
+            <i class="ri-delete-bin-line"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="status-indicator" id="status-indicator">Loading...</div>
+      
+      <!-- This div is shown when no chat is selected -->
+      <div class="empty-state" id="empty-state">
+        <h2>Welcome to Khôi Bot!</h2>
+        <p>Start a new chat or select an old chat from the list on the left.</p>
+        <button id="start-new-chat-btn">
+          <i class="ri-message-3-line"></i> Start a new conversation
+        </button>
+      </div>
+      
+      <!-- Chat messages area -->
+      <div class="chat-body" id="chat-body" style="display: none;"></div>
+      
+      <!-- Chat input area -->
+      <div class="chat-input" id="chat-input" style="display: none;">
+        <input type="text" id="message-input" placeholder="Enter a message...">
+        <button id="send-button">
+          <i class="ri-send-plane-fill"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- User Profile Modal -->
+  <div id="user-profile-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Account information</h3>
+        <span class="close-modal" id="close-profile-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="user-profile-info">
+          <div class="profile-avatar" id="profile-avatar"></div>
+          <div class="profile-details">
+            <div class="profile-item">
+              <label>Full name:</label>
+              <div id="profile-name"></div>
+            </div>
+            <div class="profile-item">
+              <label>Email:</label>
+              <div id="profile-email"></div>
+            </div>
+            <div class="profile-item">
+              <label>Phone number:</label>
+              <div id="profile-phone"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="profile-actions">
+          <button id="change-password-btn" class="change-password-btn">
+            <i class="ri-lock-password-line"></i> Change password
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Password Change Modal -->
+  <div id="password-change-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Change password</h3>
+        <span class="close-modal" id="close-password-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="change-password-form">
+          <div class="form-group password-container">
+            <label for="current-password">Current password</label>
+            <input type="password" id="current-password" placeholder="Enter current password" required>
+            <span class="password-toggle" data-target="current-password">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </span>
+          </div>
+          <div class="form-group password-container">
+            <label for="new-password">New password</label>
+            <input type="password" id="new-password" placeholder="Enter a new password" required>
+            <span class="password-toggle" data-target="new-password">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </span>
+          </div>
+          <div class="form-group password-container">
+            <label for="confirm-new-password">Confirm password</label>
+            <input type="password" id="confirm-new-password" placeholder="Confirm new password" required>
+            <span class="password-toggle" data-target="confirm-new-password">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </span>
+          </div>
+          <div id="password-error" class="error-message"></div>
+          <div class="modal-footer">
+            <button type="button" id="cancel-password-change" class="btn-secondary">Cancel</button>
+            <button type="submit" id="submit-password-change" class="btn-primary">
+              <span class="btn-text">Change password</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import the external JavaScript file -->
+  <script src="./js/chat.js"></script>
+</body>
+</html>

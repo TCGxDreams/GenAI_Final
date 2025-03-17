@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Khôi Bot Chat</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4968e6;
+            --primary-color-alt: #3a57d3;
+            --secondary-color: #1e2127;
+            --title-color: #ffffff;
+            --text-color: #a0a5b0;
+            --white-color: #fff;
+            --body-color: #121418;
+            --card-bg: #1a1d23;
+            --border-color: #32343a;
+            --input-bg: #242830;
+        }
+        
+        [data-theme="light"] {
+            --primary-color: #4968e6;
+            --primary-color-alt: #3a57d3;
+            --secondary-color: #f0f2f5;
+            --title-color: #2c3e50;
+            --text-color: #5a6a85;
+            --white-color: #000;
+            --body-color: #e5e9f0;
+            --card-bg: #ffffff;
+            --border-color: #d1d9e6;
+            --input-bg: #f0f2f5;
+        }
+        
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: var(--body-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--title-color);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+            background-color: var(--input-bg);
+            color: var(--white-color);
+            font-size: 1rem;
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.2s;
+        }
+        
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+        
+        input::placeholder {
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background-color: var(--primary-color-alt);
+            transform: translateY(-2px);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+        
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .btn-text {
+            display: inline-block;
+        }
+        
+        .error-message {
+            color: #ff4d4d;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            text-align: left;
+            display: none;
+        }
+        
+        .password-container {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+        }
+        
+        .password-toggle:hover {
+            color: var(--white-color);
+        }
+        
+        .password-container input {
+            padding-right: 40px;
+        }
+        
+        /* Success message styles */
+        .success-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .success-message svg {
+            margin-bottom: 15px;
+        }
+
+        .success-message h3 {
+            color: var(--title-color);
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .success-message button {
+            margin-top: 10px;
+        }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color: var(--text-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .theme-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+        /* Mobile optimization */
+        @media screen and (max-width: 480px) {
+            .container {
+                width: 90%;
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            input, button {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button id="theme-toggle-btn" class="theme-toggle" title="Chuyển đổi chủ đề">
+        <i class="ri-sun-line"></i>
+    </button>
+    
+    <div class="container">
+        <div class="logo">
+            <img src="./img/Khoi.png" alt="Khôi Bot Logo">
+        </div>
+        <h1>Register for Khôi Bot</h1>
+        
+        <!-- Registration Form Container -->
+        <div id="register-form-container">
+            <form id="registerForm">
+                <div class="form-group">
+                    <input type="text" id="name" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="Email Address" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                    <div id="email-error" class="error-message">Email already registered!</div>
+                    <div id="email-format-error" class="error-message">Please enter a valid email address</div>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="number" placeholder="Phone Number" required>
+                </div>
+                <div class="form-group password-container">
+                    <input type="password" id="password" placeholder="Password" required>
+                    <span class="password-toggle" id="password-toggle" data-target="password">
+                        <i class="ri-eye-line"></i>
+                    </span>
+                </div>
+                <div class="form-group password-container">
+                    <input type="password" id="confirm-password" placeholder="Confirm Password" required>
+                    <span class="password-toggle" id="confirm-password-toggle" data-target="confirm-password">
+                        <i class="ri-eye-line"></i>
+                    </span>
+                    <div id="password-match-error" class="error-message">Passwords do not match</div>
+                </div>
+                <button type="submit" id="registerBtn">
+                    <span class="btn-text">Register</span>
+                </button>
+            </form>
+            <div class="login-link">
+                Already have an account? <a href="login.html">Login here</a>
+            </div>
+        </div>
+        
+        <!-- Registration Success Message -->
+        <div id="register-success" style="display: none;">
+            <div class="success-message">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <h3>Registration Successful!</h3>
+                <p>Your account has been created successfully. You can now log in to Khôi Bot.</p>
+                <button type="button" id="go-to-login" class="btn-primary">Go to Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://67d3d8158bca322cc26b4105.mockapi.io/Users';
+        const CHAT_API_URL = 'https://67d3d8158bca322cc26b4105.mockapi.io/Chat';
+
+        const registerForm = document.getElementById('registerForm');
+        const registerBtn = document.getElementById('registerBtn');
+        const emailError = document.getElementById('email-error');
+        const emailFormatError = document.getElementById('email-format-error');
+        const passwordMatchError = document.getElementById('password-match-error');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        const passwordToggle = document.getElementById('password-toggle');
+        const confirmPasswordToggle = document.getElementById('confirm-password-toggle');
+        
+        // Email validation
+        function validateEmail(email) {
+            const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return regex.test(email);
+        }
+        
+        // Reset error messages when inputs change
+        emailInput.addEventListener('input', function() {
+            emailError.style.display = 'none';
+            emailFormatError.style.display = 'none';
+        });
+        
+        // Password match validation
+        function validatePasswordMatch() {
+            if (passwordInput.value !== confirmPasswordInput.value) {
+                passwordMatchError.style.display = 'block';
+                return false;
+            } else {
+                passwordMatchError.style.display = 'none';
+                return true;
+            }
+        }
+        
+        // Check password match on input
+        confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+        passwordInput.addEventListener('input', function() {
+            if (confirmPasswordInput.value) {
+                validatePasswordMatch();
+            }
+        });
+        
+        // Toggle password visibility
+        function togglePasswordVisibility(targetId) {
+            const input = document.getElementById(targetId);
+            if (input.type === 'password') {
+                input.type = 'text';
+            } else {
+                input.type = 'password';
+            }
+        }
+        
+        passwordToggle.addEventListener('click', function() {
+            togglePasswordVisibility(this.getAttribute('data-target'));
+            updateToggleIcon(this);
+        });
+        
+        confirmPasswordToggle.addEventListener('click', function() {
+            togglePasswordVisibility(this.getAttribute('data-target'));
+            updateToggleIcon(this);
+        });
+        
+        function updateToggleIcon(toggleElement) {
+            const inputId = toggleElement.getAttribute('data-target');
+            const input = document.getElementById(inputId);
+            
+            if (input.type === 'text') {
+                toggleElement.innerHTML = '<i class="ri-eye-off-line"></i>';
+            } else {
+                toggleElement.innerHTML = '<i class="ri-eye-line"></i>';
+            }
+        }
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Validate email format
+            const emailValue = document.getElementById('email').value.trim();
+            if (!validateEmail(emailValue)) {
+                emailFormatError.style.display = 'block';
+                return;
+            }
+            
+            // Validate password match
+            if (!validatePasswordMatch()) {
+                return;
+            }
+            
+            // Show loading indicator
+            showLoading(true);
+            
+            const user = {
+                name: document.getElementById('name').value,
+                email: emailValue,
+                number: document.getElementById('number').value,
+                password: document.getElementById('password').value,
+                createdAt: Math.floor(Date.now() / 1000)
+            };
+
+            try {
+                // Get all users and manually check for duplicate email
+                const response = await fetch(API_URL);
+                const allUsers = await response.json();
+                
+                // Find exact email match (case insensitive)
+                const emailExists = allUsers.some(existingUser => 
+                    existingUser.email.toLowerCase() === user.email.toLowerCase()
+                );
+                
+                if (emailExists) {
+                    emailError.style.display = 'block';
+                    showLoading(false);
+                    return;
+                }
+
+                // Create new user
+                const createResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(user)
+                });
+
+                if (createResponse.ok) {
+                    // Get the newly created user with ID
+                    const createdUser = await createResponse.json();
+                    
+                    // Create a new chat entry for this user
+                    const newChatEntry = {
+                        Created_Date: Math.floor(Date.now() / 1000),
+                        Name: createdUser.name,
+                        Chat_history: JSON.stringify([{
+                            role: 'bot',
+                            content: `Xin chào ${createdUser.name}! Tôi là Khôi Bot. Tôi có thể giúp gì cho bạn?`
+                        }]),
+                        id_Users: createdUser.id || createdUser.id_Users
+                    };
+                    
+                    await fetch(CHAT_API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(newChatEntry)
+                    });
+                    
+                    // Show success message
+                    document.getElementById('register-form-container').style.display = 'none';
+                    document.getElementById('register-success').style.display = 'block';
+                    
+                    // Auto redirect after 3 seconds
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 3000);
+                } else {
+                    alert('Registration failed');
+                    showLoading(false);
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert('An error occurred. Please try again.');
+                showLoading(false);
+            }
+        });
+        
+        // Go to login button
+        document.getElementById('go-to-login').addEventListener('click', function() {
+            window.location.href = 'login.html';
+        });
+        
+        function showLoading(isLoading) {
+            const btnText = registerBtn.querySelector('.btn-text');
+            
+            if (isLoading) {
+                registerBtn.disabled = true;
+                btnText.textContent = 'Registering...';
+                
+                // Add loading spinner if it doesn't exist
+                if (!registerBtn.querySelector('.loading')) {
+                    const loadingSpinner = document.createElement('span');
+                    loadingSpinner.className = 'loading';
+                    registerBtn.appendChild(loadingSpinner);
+                }
+            } else {
+                registerBtn.disabled = false;
+                btnText.textContent = 'Register';
+                
+                // Remove loading spinner if it exists
+                const loadingSpinner = registerBtn.querySelector('.loading');
+                if (loadingSpinner) {
+                    registerBtn.removeChild(loadingSpinner);
+                }
+            }
+        }
+        
+        // Theme toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for saved theme preference or use default
+            let currentTheme = localStorage.getItem('theme');
+            
+            // If no saved preference, use browser preference
+            if (!currentTheme) {
+                currentTheme = detectBrowserThemePreference();
+                // Save the detected preference
+                localStorage.setItem('theme', currentTheme);
+            }
+
+            // Apply the theme
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            
+            // Update button icon based on current theme
+            updateThemeToggleIcon(currentTheme);
+            
+            // Add event listener to theme toggle button
+            const themeToggle = document.getElementById('theme-toggle-btn');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    // Get current theme
+                    const currentTheme = document.documentElement.getAttribute('data-theme');
+                    
+                    // Toggle theme
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    
+                    // Save preference
+                    localStorage.setItem('theme', newTheme);
+                    
+                    // Apply new theme
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    
+                    // Update button icon
+                    updateThemeToggleIcon(newTheme);
+                });
+            }
+        });
+
+        // Update the toggle button icon based on theme
+        function updateThemeToggleIcon(theme) {
+            const themeToggle = document.getElementById('theme-toggle-btn');
+            if (themeToggle) {
+                if (theme === 'dark') {
+                    themeToggle.innerHTML = '<i class="ri-sun-line"></i>'; // Show sun in dark mode
+                } else {
+                    themeToggle.innerHTML = '<i class="ri-moon-line"></i>'; // Show moon in light mode
+                }
+            }
+        }
+function detectBrowserThemePreference() {
+  if (window.matchMedia) {
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    } 
+    else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      return 'light';
+    }
+  }
+  return 'dark';
+}
+   // Silent DevTools prevention - no alerts
+document.addEventListener('keydown', function(e) {
+    // Prevent F12
+    if (e.key === 'F12') {
+        e.preventDefault();
+        return false;
+    }
+    
+    // Prevent Ctrl+Shift+I
+    if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+        e.preventDefault();
+        return false;
+    }
+    
+    // Prevent Ctrl+Shift+J
+    if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+        e.preventDefault();
+        return false;
+    }
+    
+    // Prevent Ctrl+Shift+C
+    if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+        e.preventDefault();
+        return false;
+    }
+    
+    // Prevent Ctrl+U (view source)
+    if (e.ctrlKey && e.key === 'u') {
+        e.preventDefault();
+        return false;
+    }
+});
+
+// Silent context menu prevention
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    return false;
+});
+
+// More sophisticated DevTools detection
+(function() {
+    const devtools = {
+        isOpen: false,
+        orientation: undefined
+    };
+    
+    // Define different checks for DevTools
+    const threshold = 160;
+    const emitEvent = function(isOpen, orientation) {
+        window.dispatchEvent(new CustomEvent('devtoolschange', {
+            detail: {
+                isOpen,
+                orientation
+            }
+        }));
+    };
+    
+    // Check window size differences
+    const checkDevTools = function() {
+        const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+        const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+        const orientation = widthThreshold ? 'vertical' : 'horizontal';
+        
+        if (widthThreshold || heightThreshold) {
+            if (!devtools.isOpen || devtools.orientation !== orientation) {
+                devtools.isOpen = true;
+                devtools.orientation = orientation;
+                emitEvent(true, orientation);
+            }
+        } else {
+            if (devtools.isOpen) {
+                devtools.isOpen = false;
+                devtools.orientation = undefined;
+                emitEvent(false, undefined);
+            }
+        }
+    };
+    
+    window.addEventListener('resize', checkDevTools);
+    setInterval(checkDevTools, 1000);
+})();
+    </script>
+</body>
+</html>
