@@ -1,5 +1,5 @@
 // API endpoints
-const API_ENDPOINT = "https://1e51-27-3-88-107.ngrok-free.app/generate";
+const API_ENDPOINT = "https://52e79a3267ba.ngrok-free.app/generate";
 const API_HISTORY_ENDPOINT = "https://67d3d8158bca322cc26b4105.mockapi.io/Chat";
 
 // DOM elements
